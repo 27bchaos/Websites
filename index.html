@@ -1,14 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Top-Down Shooter</title>
+  <title>Touch Shooter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <style>
-    body { margin: 0; overflow: hidden; }
-    canvas { display: block; }
+    body { margin: 0; overflow: hidden; background: #eee; }
+    canvas { display: block; background: #f4f4f4; }
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .button {
+      width: 60px;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      line-height: 60px;
+      border-radius: 8px;
+      user-select: none;
+    }
+    .shoot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 80px;
+      height: 80px;
+      font-size: 18px;
+      background: rgba(255, 0, 0, 0.6);
+      color: white;
+      text-align: center;
+      line-height: 80px;
+      border-radius: 40px;
+    }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
+  <div class="controls">
+    <div class="button" data-dir="ArrowLeft">←</div>
+    <div class="button" data-dir="ArrowUp">↑</div>
+    <div class="button" data-dir="ArrowDown">↓</div>
+    <div class="button" data-dir="ArrowRight">→</div>
+  </div>
+  <div class="shoot" id="shootBtn">SHOOT</div>
+
   <script src="index.js"></script>
 </body>
 </html>
