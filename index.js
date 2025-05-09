@@ -95,7 +95,8 @@ function startGame() {
 function gameLoop() {
   if (isGameOver) return;
   
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+ctx.fillStyle = 'red'; // Set the background color to red
+ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the entire canvas with red
 
   // Update and draw all balloons
   balloons.forEach((balloon, index) => {
