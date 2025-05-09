@@ -5,17 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Balloon Game</title>
   <style>
+    body {
+      margin: 0;
+      position: relative;
+    }
     #gameCanvas {
       border: 1px solid black;
-      background-color: red; /* Makes the background of the game area red */
+      background-color: red;
     }
     #currentWord {
       position: absolute;
-      top: 50%; /* Center vertically */
-      right: 10px; /* Place it on the right side */
-      transform: translateY(-50%); /* Adjust to perfectly center it vertically */
+      top: 50%;
+      right: 100px; /* Moved left from the right edge */
+      transform: translateY(-50%);
       font-size: 20px;
       text-align: center;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
     }
   </style>
 </head>
