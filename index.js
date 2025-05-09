@@ -31,13 +31,15 @@ function randomizeSquarePosition() {
 }
 
 // Handle tap/click
-canvas.addEventListener('click', (event) => {
-  if (!gameRunning) return;
+function handleUserInteraction(event) {
+  // Prevent default behavior for touch events (avoid scrolling/zooming)
+  event.preventDefault();
 
-  const mouseX = event.clientX;
-  const mouseY = event.clientY;
+  // Get mouse/touch position
+  const mouseX = event.clientX || event.touches[0].clientX;
+  const mouseY = event.clientY || event.touches[0].clientY;
 
-  // Check if the click is within the square
+  // Check if the touch or click is within the square
   if (
     mouseX > square.x &&
     mouseX < square.x + square.size &&
@@ -47,7 +49,11 @@ canvas.addEventListener('click', (event) => {
     score++;  // Increase score if the square is tapped
     randomizeSquarePosition();  // Move square to a new position
   }
-});
+}
+
+// Add event listeners for click and touch
+canvas.addEventListener('click', handleUserInteraction);
+canvas.addEventListener('touchstart', handleUserInteraction);  // Add touch support
 
 // Game loop
 function gameLoop() {
