@@ -3,53 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Balloon Word Game</title>
+  <title>Balloon Game</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-      flex-direction: column;
+    #gameCanvas {
+      border: 1px solid black;
     }
-    canvas {
-      border: 2px solid #000;
-      background-color: #fff;
-    }
-    #score {
-      font-size: 24px;
-      margin: 10px 0;
-    }
-    input {
-      font-size: 18px;
-      padding: 5px;
-      margin: 5px 0;
-    }
-    button {
-      font-size: 18px;
-      padding: 10px;
-      cursor: pointer;
+    #currentWord {
+      font-size: 20px;
+      text-align: center;
       margin-top: 10px;
-    }
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-
-  <canvas id="gameCanvas" width="500" height="500"></canvas>
-  
+  <canvas id="gameCanvas" width="500" height="600"></canvas>
+  <br>
+  <input type="text" id="inputText" placeholder="Type the word">
   <div id="score">Score: 0</div>
+  <button id="restartButton">Restart Game</button>
+  <div id="currentWord"></div> <!-- Display current word here -->
   
-  <input type="text" id="inputText" placeholder="Type the word on the balloon">
-  
-  <button id="restartButton" disabled>Restart Game</button>
-
   <script src="index.js"></script>
 </body>
 </html>
