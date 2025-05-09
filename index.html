@@ -106,8 +106,7 @@
       "cinnamon", "cloves", "nutmeg", "allspice", "ginger", "cardamom", "curry", "turmeric", "paprika", "black pepper", "salt",
       "chili powder", "cayenne", "cumin", "mustard", "bay leaves", "vinegar", "balsamic vinegar", "white vinegar", "apple cider",
       "shoyu", "soy sauce", "worcestershire sauce", "hot sauce", "mustard", "tomato paste", "salsa", "peanut butter", "mayo"
-    ];
-    ];
+    ];    ];
 
     let score = 0;
     let balloon = null;  // Only one balloon at a time
@@ -119,7 +118,7 @@
         this.word = word;
         this.x = canvas.width / 2 - 50;  // Centered horizontally
         this.y = canvas.height + 50;  // Start from below the canvas
-        this.speed = 1; // Slow speed for mobile-friendliness
+        this.speed = 2; // Normal speed
       }
 
       draw() {
@@ -137,7 +136,7 @@
       update() {
         this.y -= this.speed;
         if (this.y < 0) {
-          gameOver = true;
+          gameOver = true;  // End the game if balloon goes out of view
         }
       }
     }
