@@ -1,7 +1,7 @@
-
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Resize the canvas to fill the window
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -10,40 +10,18 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 // Game Variables
-let keys = {};
-let fruits = [];
+let balloons = [];
 let score = 0;
-let lives = 3;
 let gameOver = false;
 
-// Assets and classes
-class Basket {
+// Balloon class
+class Balloon {
   constructor() {
-    this.width = 100;
-    this.height = 40;
-    this.x = canvas.width / 2 - this.width / 2;
-    this.y = canvas.height - this.height - 10;
-    this.speed = 6;
-  }
-
-  draw() {
-    ctx.fillStyle = '#8B4513';
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
-
-  move() {
-    if (keys['ArrowLeft'] && this.x > 0) this.x -= this.speed;
-    if (keys['ArrowRight'] && this.x + this.width < canvas.width) this.x += this.speed;
-  }
-}
-
-class Fruit {
-  constructor() {
-    this.radius = 20;
+    this.radius = 30 + Math.random() * 40;
     this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
-    this.y = -this.radius;
-    this.speed = 2 + Math.random() * 4;
-    this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
+    this.y = canvas.height + this.radius;
+    this.speed = 1 + Math.random() * 3;
+    this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
   }
 
   draw() {
@@ -55,80 +33,77 @@ class Fruit {
   }
 
   update() {
-    this.y += this.speed;
+    this.y -= this.speed;
   }
 }
 
-const basket = new Basket();
-
-function spawnFruit() {
+// Start the game
+function spawnBalloon() {
   if (!gameOver) {
-    fruits.push(new Fruit());
-    setTimeout(spawnFruit, 700 + Math.random() * 800);
+    balloons.push(new Balloon());
+    setTimeout(spawnBalloon, 800);  // spawn a new balloon every 0.8 seconds
   }
 }
 
-function detectCatch(fruit) {
-  return fruit.y + fruit.radius >= basket.y &&
-         fruit.x > basket.x &&
-         fruit.x < basket.x + basket.width;
+// Detect balloon click or touch
+function detectPop(x, y) {
+  for (let i = balloons.length - 1; i >= 0; i--) {
+    const balloon = balloons[i];
+    const dist = Math.sqrt((balloon.x - x) ** 2 + (balloon.y - y) ** 2);
+    if (dist <= balloon.radius) {
+      balloons.splice(i, 1);  // remove the popped balloon
+      score += 10;            // increase score
+      break;
+    }
+  }
 }
 
+// Draw the score
+function drawScore() {
+  ctx.fillStyle = '#333';
+  ctx.font = '24px Arial';
+  ctx.fillText(`Score: ${score}`, 20, 40);
+}
+
+// Update the game
 function update() {
   if (gameOver) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  basket.move();
-  basket.draw();
+  // Update balloons
+  for (let i = balloons.length - 1; i >= 0; i--) {
+    const balloon = balloons[i];
+    balloon.update();
+    balloon.draw();
 
-  for (let i = fruits.length - 1; i >= 0; i--) {
-    const fruit = fruits[i];
-    fruit.update();
-    fruit.draw();
-
-    if (detectCatch(fruit)) {
-      fruits.splice(i, 1);
-      score += 10;
-    } else if (fruit.y - fruit.radius > canvas.height) {
-      fruits.splice(i, 1);
-      lives--;
-      if (lives <= 0) gameOver = true;
+    if (balloon.y + balloon.radius < 0) {
+      balloons.splice(i, 1);
+      gameOver = true;
     }
   }
 
-  drawHUD();
+  // Draw the score
+  drawScore();
+
+  // Request the next animation frame
   requestAnimationFrame(update);
 }
 
-function drawHUD() {
-  ctx.fillStyle = 'black';
-  ctx.font = '20px Arial';
-  ctx.fillText(`Score: ${score}`, 10, 30);
-  ctx.fillText(`Lives: ${lives}`, 10, 60);
-  if (gameOver) {
-    ctx.fillStyle = 'red';
-    ctx.font = '40px Arial';
-    ctx.fillText('GAME OVER', canvas.width / 2 - 140, canvas.height / 2);
+// Mouse and touch event listeners
+canvas.addEventListener('mousedown', (e) => {
+  if (!gameOver) {
+    detectPop(e.clientX, e.clientY);
   }
-}
+});
 
-// Controls (keyboard and touch)
-document.addEventListener('keydown', (e) => keys[e.key] = true);
-document.addEventListener('keyup', (e) => keys[e.key] = false);
-
-// Touch support
-let touchX = null;
 canvas.addEventListener('touchstart', (e) => {
-  touchX = e.touches[0].clientX;
+  e.preventDefault();
+  if (!gameOver) {
+    const touch = e.touches[0];
+    detectPop(touch.clientX, touch.clientY);
+  }
 });
 
-canvas.addEventListener('touchmove', (e) => {
-  const dx = e.touches[0].clientX - touchX;
-  basket.x += dx * 0.5;
-  if (basket.x < 0) basket.x = 0;
-  if (basket.x + basket.width > canvas.width) basket.x = canvas.width - basket.width;
-  touchX = e.touches[0].clientX;
-});
-
-spawnFruit();
+// Start the game loop
+spawnBalloon();
 update();
