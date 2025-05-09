@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Balloon Game</title>
   <style>
-    body {
-      margin: 0;
-      position: relative;
-    }
     #gameCanvas {
       border: 1px solid black;
       background-color: red;
     }
+
     #currentWord {
       position: absolute;
-      top: 50%;
-      left: 680px; /* Just to the right of the 500px-wide canvas */
-      transform: translateY(-50%);
+      top: 200px;         /* vertical placement */
+      left: 680px;        /* horizontal placement */
       font-size: 20px;
-      text-align: center;
       background-color: white;
-      padding: 10px;
-      border-radius: 5px;
+      padding: 8px;
+      border-radius: 6px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="500" height="600"></canvas>
-  <br>
-  <input type="text" id="inputText" placeholder="Type the word">
+  <canvas id="gameCanvas" width="500" height="500"></canvas>
+  <br />
+  <input type="text" id="inputText" placeholder="Type the word" />
   <div id="score">Score: 0</div>
   <button id="restartButton">Restart Game</button>
   <div id="currentWord"></div>
