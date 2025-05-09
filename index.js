@@ -33,8 +33,6 @@ const wordList = ["alphabet", "astronaut", "bicycle", "camera", "planet", "rocke
       "chili powder", "cayenne", "cumin", "mustard", "bay leaves", "vinegar", "balsamic vinegar", "white vinegar", "apple cider",
       "shoyu", "soy sauce", "worcestershire sauce", "hot sauce", "mustard", "tomato paste", "salsa", "peanut butter", "mayo"
     ];
- 
-
 
 // Balloon class
 class Balloon {
@@ -114,17 +112,6 @@ function gameLoop() {
     scoreElement.textContent = `Score: ${score}`;
     generateBalloon();
     inputElement.value = '';
-  }
-
-  // Display the current word at the bottom of the canvas
-  if (balloons.length > 0) {
-    const word = balloons[0].word;
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
-    const wordWidth = ctx.measureText(word).width;
-    const xPosition = canvas.width / 2 - wordWidth / 2; // Center the word
-    const yPosition = canvas.height - 20; // Position at the bottom of the canvas
-    ctx.fillText(word, xPosition, yPosition);
   }
 }
 
