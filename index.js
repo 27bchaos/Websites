@@ -138,3 +138,13 @@ restartButton.addEventListener('click', function() {
 
 // Start the game when the page loads
 startGame();
+
+function printCurrentWord() {
+  const currentWord = balloons.length > 0 ? balloons[0].word : ''; // Get the current word
+  ctx.fillStyle = 'black';
+  ctx.font = '20px Arial';
+  const wordWidth = ctx.measureText(currentWord).width;
+  const xPosition = canvas.width / 2 - wordWidth / 2; // Center the word
+  const yPosition = canvas.height - 20; // Position at the bottom of the canvas
+  ctx.fillText(currentWord, xPosition, yPosition);
+}
