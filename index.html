@@ -13,6 +13,7 @@
       height: 100vh;
       margin: 0;
       background-color: #f0f0f0;
+      overflow: hidden;
     }
 
     canvas {
@@ -27,6 +28,8 @@
       transform: translateX(-50%);
       padding: 10px;
       font-size: 18px;
+      width: 70%;
+      max-width: 300px;
     }
 
     #submitBtn {
@@ -37,6 +40,28 @@
       padding: 10px 20px;
       font-size: 18px;
       cursor: pointer;
+      width: 70%;
+      max-width: 300px;
+    }
+
+    #score {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    #gameOver {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      font-weight: bold;
+      color: red;
+      text-align: center;
     }
   </style>
 </head>
@@ -45,12 +70,16 @@
   <canvas id="gameCanvas" width="800" height="600"></canvas>
   <input type="text" id="wordInput" placeholder="Type the word" />
   <button id="submitBtn">Submit</button>
+  <div id="score">Score: 0</div>
+  <div id="gameOver" style="display: none;">Game Over!</div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const wordInput = document.getElementById('wordInput');
     const submitBtn = document.getElementById('submitBtn');
+    const scoreDiv = document.getElementById('score');
+    const gameOverDiv = document.getElementById('gameOver');
 
     // Array of words for the game
     const words = [
@@ -73,25 +102,7 @@
       "glass", "mug", "cup", "plate", "bowl", "spoon", "fork", "knife", "napkin", "tray", "chef", "recipe", "meal",
       "snacks", "appetizer", "entree", "dessert", "barista", "bakery", "pastry", "donut", "muffin", "croissant", "toast",
       "bagel", "pancake", "waffle", "crepe", "omelet", "bacon", "eggs", "sausage", "toast", "butter", "jam", "jelly",
-      "peanut butter", "nutella", "honey", "syrup", "bacon", "sausage", "ham", "turkey", "chicken", "steak", "beef",
-      "lamb", "pork", "tofu", "fish", "shrimp", "lobster", "scallops", "crab", "tuna", "salmon", "cod", "halibut", "trout",
-      "sardines", "anchovies", "squid", "octopus", "lobster", "clams", "mussels", "oysters", "sushi", "sashimi", "fried rice",
-      "stir fry", "sushi", "soup", "stew", "salad", "pasta", "ravioli", "spaghetti", "lasagna", "penne", "tortellini",
-      "gnocchi", "macaroni", "fusilli", "farfalle", "spaghetti", "penne", "tagliatelle", "fusilli", "linguine", "ravioli",
-      "pizza", "pepperoni", "vegetarian", "cheese", "margarita", "crust", "topping", "sauce", "parmesan", "mozzarella",
-      "cheddar", "mozzarella", "cheddar", "feta", "gouda", "brie", "camembert", "blue cheese", "parmesan", "asiago", "provolone",
-      "cheese", "pizza", "topping", "pepperoni", "olives", "mushrooms", "peppers", "onions", "tomatoes", "sausage", "bacon",
-      "pineapple", "seafood", "vegetarian", "vegan", "gluten-free", "dairy-free", "sugar-free", "nut-free", "healthy", "organic",
-      "natural", "junk food", "fast food", "snack", "chips", "crisps", "fries", "burgers", "sandwiches", "hot dog", "wrap",
-      "kebab", "falafel", "tacos", "burrito", "quesadilla", "nachos", "guacamole", "salsa", "chili", "hummus", "pita", "samosas",
-      "spring rolls", "fried chicken", "nuggets", "wings", "popcorn", "ice cream", "cake", "cookie", "brownie", "pie", "tart",
-      "donuts", "cupcakes", "cheesecake", "brownies", "chocolate", "candy", "lollipop", "bubblegum", "mint", "lemon", "lime",
-      "strawberry", "raspberry", "cherry", "watermelon", "pineapple", "orange", "apple", "banana", "pear", "plum", "kiwi",
-      "fig", "apricot", "peach", "grape", "tangerine", "apricot", "coconut", "jackfruit", "dragonfruit", "papaya", "blueberry",
-      "cranberry", "mulberry", "blackberry", "strawberry", "fruit", "vegetables", "spinach", "peas", "broccoli", "carrots",
-      "tomato", "cucumber", "celery", "lettuce", "zucchini", "eggplant", "mushrooms", "onions", "garlic", "ginger", "parsley",
-      "basil", "thyme", "oregano", "rosemary", "mint", "cilantro", "dill", "tarragon", "sage", "chives", "rosemary", "thyme",
-      "oregano", "parsley", "basil", "honey", "syrup", "brown sugar", "granulated sugar", "powdered sugar", "molasses", "vanilla",
+      "peanut butter", "nutella", "honey", "syrup", "brown sugar", "granulated sugar", "powdered sugar", "molasses", "vanilla",
       "cinnamon", "cloves", "nutmeg", "allspice", "ginger", "cardamom", "curry", "turmeric", "paprika", "black pepper", "salt",
       "chili powder", "cayenne", "cumin", "mustard", "bay leaves", "vinegar", "balsamic vinegar", "white vinegar", "apple cider",
       "shoyu", "soy sauce", "worcestershire sauce", "hot sauce", "mustard", "tomato paste", "salsa", "peanut butter", "mayo"
@@ -106,8 +117,8 @@
       constructor(word) {
         this.word = word;
         this.x = Math.random() * (canvas.width - 100);
-        this.y = canvas.height;
-        this.speed = Math.random() * 2 + 1;
+        this.y = canvas.height + 50;
+        this.speed = Math.random() * 1.5 + 1; // slower balloons
       }
 
       draw() {
@@ -141,6 +152,7 @@
       if (wordInputValue.trim().toLowerCase() === balloons[0].word.toLowerCase()) {
         score += 100;
         balloons.shift();
+        wordInputValue = '';
       }
     }
 
@@ -152,14 +164,10 @@
         balloon.draw();
       });
 
-      ctx.fillStyle = '#000';
-      ctx.font = '24px Arial';
-      ctx.fillText(`Score: ${score}`, 10, 30);
+      scoreDiv.textContent = `Score: ${score}`;
 
       if (gameOver) {
-        ctx.fillStyle = '#f00';
-        ctx.font = '40px Arial';
-        ctx.fillText('Game Over!', canvas.width / 2 - 100, canvas.height / 2);
+        gameOverDiv.style.display = 'block';
       }
     }
 
