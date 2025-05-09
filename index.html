@@ -7,21 +7,24 @@
   <style>
     #gameCanvas {
       border: 1px solid black;
+      background-color: red; /* Makes the background of the game area red */
     }
     #currentWord {
+      position: absolute;
+      top: calc(50% + 288px); /* Move it down by 3 inches (288px) */
+      right: 10px; /* Place it on the right side */
       font-size: 20px;
       text-align: center;
-      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div id="currentWord"></div> <!-- Display current word here -->
   <canvas id="gameCanvas" width="500" height="600"></canvas>
   <br>
   <input type="text" id="inputText" placeholder="Type the word">
   <div id="score">Score: 0</div>
   <button id="restartButton">Restart Game</button>
+  <div id="currentWord"></div> <!-- Display current word here -->
   
   <script src="index.js"></script>
 </body>
