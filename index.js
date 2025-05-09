@@ -3,12 +3,15 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const inputElement = document.getElementById('inputText');
 const scoreElement = document.getElementById('score');
+const wordDisplay = document.getElementById('wordDisplay');
 const restartButton = document.getElementById('restartButton');
+const submitButton = document.getElementById('submitBtn');
 
 let balloons = [];
 let score = 0;
 let gameInterval;
 let isGameOver = false;
+let currentWord = "";
 const wordList = ["apple", "banana", "cherry", "grape", "orange", "watermelon", "strawberry", "pineapple"];
 
 // Balloon class
@@ -17,7 +20,7 @@ class Balloon {
     this.x = Math.random() * (canvas.width - 100);
     this.y = canvas.height;
     this.word = word;
-    this.speed = Math.random() * 2 + 1;  // Speed of balloon rising
+    this.speed = Math.random() * 1 + 0.5;  // Slower speed for easier play
   }
 
   // Draw balloon
@@ -39,7 +42,7 @@ class Balloon {
     this.y -= this.speed;
   }
 
-  // Check if the balloon is off the screen
+  // Check if the balloon is out of bounds
   isOutOfBounds() {
     return this.y < -30;
   }
@@ -55,12 +58,14 @@ function startGame() {
   score = 0;
   isGameOver = false;
   restartButton.disabled = true;
+  submitButton.disabled = false;
+  inputElement.disabled = false;
   balloons = [];
   generateBalloon();
   scoreElement.textContent = `Score: ${score}`;
+  wordDisplay.textContent = `Type this word: ${currentWord}`;
   inputElement.value = '';
   inputElement.focus();
-  inputElement.disabled = false;
   gameInterval = setInterval(gameLoop, 16); // Run game loop every 16ms
 }
 
@@ -81,22 +86,13 @@ function gameLoop() {
       gameOver();
     }
   });
-
-  // Check if the user typed the correct word
-  if (inputElement.value.toLowerCase() === balloons[0]?.word.toLowerCase()) {
-    score++;
-    balloons.shift(); // Remove popped balloon
-    scoreElement.textContent = `Score: ${score}`;
-    generateBalloon();
-    inputElement.value = '';
-  }
 }
 
 // Generate a new balloon with a random word
 function generateBalloon() {
   if (isGameOver) return;
-  const word = generateWord();
-  balloons.push(new Balloon(word));
+  currentWord = generateWord();
+  balloons.push(new Balloon(currentWord));
 }
 
 // Game over function
@@ -104,9 +100,22 @@ function gameOver() {
   clearInterval(gameInterval);
   isGameOver = true;
   inputElement.disabled = true;
+  submitButton.disabled = true;
   restartButton.disabled = false;
   alert('Game Over! Your final score: ' + score);
 }
+
+// Submit button click event
+submitButton.addEventListener('click', function() {
+  if (inputElement.value.toLowerCase() === currentWord.toLowerCase()) {
+    score++;
+    balloons.shift(); // Remove popped balloon
+    scoreElement.textContent = `Score: ${score}`;
+    generateBalloon();
+    inputElement.value = '';
+    wordDisplay.textContent = `Type this word: ${currentWord}`;
+  }
+});
 
 // Restart the game
 restartButton.addEventListener('click', function() {
