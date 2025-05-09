@@ -12,7 +12,55 @@ let score = 0;
 let gameInterval;
 let isGameOver = false;
 let currentWord = "";
-const wordList = ["apple", "banana", "cherry", "grape", "orange", "watermelon", "strawberry", "pineapple"];
+const wordList = const wordList = [
+  "alphabet", "astronaut", "bicycle", "camera", "planet", "rocket", "school", "library", "notebook", "pencil",
+  "computer", "keyboard", "monitor", "screen", "website", "internet", "email", "printer", "scissors", "ruler",
+  "calculator", "backpack", "chalkboard", "teacher", "student", "classroom", "desk", "chair", "book", "pen",
+  "marker", "paper", "eraser", "stapler", "binder", "folder", "calendar", "vacation", "holiday", "beach",
+  "mountain", "forest", "desert", "park", "playground", "lake", "river", "ocean", "city", "village", "town",
+  "skyscraper", "building", "street", "road", "car", "motorcycle", "truck", "bus", "bicycle", "subway", "airplane",
+  "helicopter", "ship", "boat", "taxi", "traffic", "construction", "bridge", "tunnel", "subway", "train", "airport",
+  "station", "museum", "gallery", "theater", "cinema", "stadium", "concert", "festival", "park", "zoo", "aquarium",
+  "circus", "carnival", "library", "bookstore", "coffee", "restaurant", "kitchen", "table", "chair", "sofa", "bed",
+  "lamp", "window", "door", "refrigerator", "microwave", "oven", "dishwasher", "cooking", "eating", "drinking",
+  "breakfast", "lunch", "dinner", "dessert", "snack", "sandwich", "salad", "pizza", "pasta", "soup", "cheese",
+  "cake", "chocolate", "ice cream", "cookie", "fruit", "vegetable", "tomato", "cucumber", "lettuce", "carrot",
+  "broccoli", "spinach", "peas", "eggplant", "zucchini", "potatoes", "onions", "garlic", "herbs", "spices", "salt",
+  "pepper", "vinegar", "mustard", "honey", "sugar", "syrup", "jam", "sauce", "curry", "fried", "grilled", "baked",
+  "boiled", "steamed", "raw", "roasted", "mashed", "whipped", "smoothie", "juice", "milk", "tea", "coffee", "soda",
+  "beer", "wine", "cocktail", "whiskey", "vodka", "rum", "gin", "tequila", "champagne", "cider", "cocktail", "drink",
+  "glass", "mug", "cup", "plate", "bowl", "spoon", "fork", "knife", "napkin", "tray", "chef", "recipe", "meal",
+  "snacks", "appetizer", "entree", "dessert", "barista", "bakery", "pastry", "donut", "muffin", "croissant", "toast",
+  "bagel", "pancake", "waffle", "crepe", "omelet", "bacon", "eggs", "sausage", "toast", "butter", "jam", "jelly",
+  "peanut butter", "nutella", "honey", "syrup", "bacon", "sausage", "ham", "turkey", "chicken", "steak", "beef",
+  "lamb", "pork", "tofu", "fish", "shrimp", "lobster", "scallops", "crab", "tuna", "salmon", "cod", "halibut", "trout",
+  "sardines", "anchovies", "squid", "octopus", "lobster", "clams", "mussels", "oysters", "sushi", "sashimi", "fried rice",
+  "stir fry", "sushi", "soup", "stew", "salad", "pasta", "ravioli", "spaghetti", "lasagna", "penne", "tortellini",
+  "gnocchi", "macaroni", "fusilli", "farfalle", "spaghetti", "penne", "tagliatelle", "fusilli", "linguine", "ravioli",
+  "pizza", "pepperoni", "vegetarian", "cheese", "margarita", "crust", "topping", "sauce", "parmesan", "mozzarella",
+  "cheddar", "mozzarella", "cheddar", "feta", "gouda", "brie", "camembert", "blue cheese", "parmesan", "asiago", "provolone",
+  "cheese", "pizza", "topping", "pepperoni", "olives", "mushrooms", "peppers", "onions", "tomatoes", "sausage", "bacon",
+  "pineapple", "seafood", "vegetarian", "vegan", "gluten-free", "dairy-free", "sugar-free", "nut-free", "healthy", "organic",
+  "natural", "junk food", "fast food", "snack", "chips", "crisps", "fries", "burgers", "sandwiches", "hot dog", "wrap",
+  "kebab", "falafel", "tacos", "burrito", "quesadilla", "nachos", "guacamole", "salsa", "chili", "hummus", "pita", "samosas",
+  "spring rolls", "fried chicken", "nuggets", "wings", "popcorn", "ice cream", "cake", "cookie", "brownie", "pie", "tart",
+  "donuts", "cupcakes", "cheesecake", "brownies", "chocolate", "candy", "lollipop", "bubblegum", "mint", "lemon", "lime",
+  "strawberry", "raspberry", "cherry", "watermelon", "pineapple", "orange", "apple", "banana", "pear", "plum", "kiwi",
+  "fig", "apricot", "peach", "grape", "tangerine", "apricot", "coconut", "jackfruit", "dragonfruit", "papaya", "blueberry",
+  "cranberry", "mulberry", "blackberry", "strawberry", "fruit", "vegetables", "spinach", "peas", "broccoli", "carrots",
+  "tomato", "cucumber", "celery", "lettuce", "zucchini", "eggplant", "mushrooms", "onions", "garlic", "ginger", "parsley",
+  "basil", "thyme", "oregano", "rosemary", "mint", "cilantro", "dill", "tarragon", "sage", "chives", "rosemary", "thyme",
+  "oregano", "parsley", "basil", "honey", "syrup", "vanilla", "cinnamon", "chocolate", "caramel", "nuts", "almonds",
+  "hazelnuts", "walnuts", "cashews", "peanuts", "pistachios", "macadamia", "peanuts", "sunflower", "pumpkin", "chia",
+  "flax", "sesame", "melon", "cantaloupe", "watermelon", "pineapple", "pear", "peach", "apple", "nectarine", "grapefruit",
+  "pomegranate", "kiwi", "mango", "passionfruit", "apricot", "plum", "grape", "lime", "lemon", "orange", "banana",
+  "apple", "peach", "nectarine", "plum", "apricot", "tangerine", "watermelon", "honeydew", "blueberry", "blackberry",
+  "raspberry", "strawberry", "redcurrant", "gooseberry", "elderberry", "loganberry", "dewberry", "jujube", "corn",
+  "cornfield", "maize", "cornflour", "maize flour", "maize meal", "kernels", "cob", "popcorn", "popcorn kernel",
+  "barley", "wheat", "rice", "quinoa", "buckwheat", "oats", "millet", "sorghum", "rye", "teff", "amaranth", "lentils",
+  "beans", "peas", "chickpeas", "soybeans", "tofu", "tempeh", "seitan", "natto", "miso", "soy sauce", "tamari",
+  "tofu", "veggie burger", "quinoa salad", "chickpea stew"
+];
 
 // Balloon class
 class Balloon {
