@@ -91,38 +91,35 @@
       "cranberry", "mulberry", "blackberry", "strawberry", "fruit", "vegetables", "spinach", "peas", "broccoli", "carrots",
       "tomato", "cucumber", "celery", "lettuce", "zucchini", "eggplant", "mushrooms", "onions", "garlic", "ginger", "parsley",
       "basil", "thyme", "oregano", "rosemary", "mint", "cilantro", "dill", "tarragon", "sage", "chives", "rosemary", "thyme",
-      "oregano", "parsley", "basil", "honey", "syrup", "vanilla", "cinnamon", "chocolate", "caramel", "nuts", "almonds",
-      "hazelnuts", "walnuts", "cashews", "peanuts", "pistachios", "macadamia", "peanuts", "sunflower", "pumpkin", "chia",
-      "flax", "sesame", "melon", "cantaloupe", "watermelon", "pineapple", "pear", "peach", "apple", "nectarine", "grapefruit",
-      "pomegranate", "kiwi", "mango", "passionfruit", "apricot", "plum", "grape", "lime", "lemon", "orange", "banana",
-      "apple", "peach", "nectarine", "plum", "apricot", "tangerine", "watermelon", "honeydew", "blueberry", "blackberry",
-      "raspberry", "strawberry", "redcurrant", "gooseberry", "elderberry", "loganberry", "dewberry", "jujube", "corn",
-      "cornfield", "maize", "cornflour", "maize flour", "maize meal", "kernels", "cob", "popcorn", "popcorn kernel",
-      "barley", "wheat", "rice", "quinoa", "buckwheat", "oats", "millet", "sorghum", "rye", "teff", "amaranth", "lentils",
-      "beans", "peas", "chickpeas", "soybeans", "tofu", "tempeh", "seitan", "natto", "miso", "soy sauce", "tamari",
-      "tofu", "veggie burger", "quinoa salad", "chickpea stew"
+      "oregano", "parsley", "basil", "honey", "syrup", "brown sugar", "granulated sugar", "powdered sugar", "molasses", "vanilla",
+      "cinnamon", "cloves", "nutmeg", "allspice", "ginger", "cardamom", "curry", "turmeric", "paprika", "black pepper", "salt",
+      "chili powder", "cayenne", "cumin", "mustard", "bay leaves", "vinegar", "balsamic vinegar", "white vinegar", "apple cider",
+      "shoyu", "soy sauce", "worcestershire sauce", "hot sauce", "mustard", "tomato paste", "salsa", "peanut butter", "mayo"
     ];
 
-    let balloons = [];
     let score = 0;
+    let balloons = [];
     let gameOver = false;
-    let currentWord = '';
     let wordInputValue = '';
 
     class Balloon {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = canvas.height + 50;
-        this.speed = Math.random() * 1.5 + 1;
-        this.word = words[Math.floor(Math.random() * words.length)];
+      constructor(word) {
+        this.word = word;
+        this.x = Math.random() * (canvas.width - 100);
+        this.y = canvas.height;
+        this.speed = Math.random() * 2 + 1;
       }
 
       draw() {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 30, 0, Math.PI * 2);
-        ctx.fillStyle = 'red';
+        ctx.arc(this.x + 50, this.y, 40, 0, Math.PI * 2);
+        ctx.fillStyle = '#ff6347';
         ctx.fill();
         ctx.closePath();
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '20px Arial';
+        ctx.fillText(this.word, this.x + 15, this.y - 10);
       }
 
       update() {
@@ -131,53 +128,57 @@
           gameOver = true;
         }
       }
-
-      checkHit(inputWord) {
-        if (this.word === inputWord) {
-          score += 10;
-          return true;
-        }
-        return false;
-      }
     }
 
+    // Function to spawn a random balloon
     function spawnBalloon() {
-      if (!gameOver) {
-        balloons.push(new Balloon());
-        setTimeout(spawnBalloon, 1000);
+      const word = words[Math.floor(Math.random() * words.length)];
+      balloons.push(new Balloon(word));
+    }
+
+    // Function to check if typed word matches the balloon's word
+    function checkWordMatch() {
+      if (wordInputValue.trim().toLowerCase() === balloons[0].word.toLowerCase()) {
+        score += 100;
+        balloons.shift();
       }
     }
 
-    function updateGame() {
-      if (gameOver) {
-        ctx.fillStyle = 'red';
-        ctx.font = '30px Arial';
-        ctx.fillText('Game Over!', canvas.width / 2 - 80, canvas.height / 2);
-        ctx.fillText('Score: ' + score, canvas.width / 2 - 60, canvas.height / 2 + 40);
-        return;
-      }
-
+    function drawGame() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       balloons.forEach((balloon, index) => {
         balloon.update();
         balloon.draw();
-
-        if (balloon.checkHit(wordInputValue)) {
-          balloons.splice(index, 1);
-          wordInputValue = '';
-        }
       });
 
+      ctx.fillStyle = '#000';
+      ctx.font = '24px Arial';
+      ctx.fillText(`Score: ${score}`, 10, 30);
+
+      if (gameOver) {
+        ctx.fillStyle = '#f00';
+        ctx.font = '40px Arial';
+        ctx.fillText('Game Over!', canvas.width / 2 - 100, canvas.height / 2);
+      }
+    }
+
+    function updateGame() {
+      if (gameOver) return;
+
+      drawGame();
       requestAnimationFrame(updateGame);
     }
 
+    // Event listener for word submission
     submitBtn.addEventListener('click', () => {
       wordInputValue = wordInput.value.toLowerCase().trim();
       wordInput.value = '';
+      checkWordMatch();
     });
 
-    spawnBalloon();
+    // Start the game loop
+    setInterval(spawnBalloon, 1000);
     updateGame();
   </script>
 
