@@ -1,13 +1,12 @@
-// A full-featured browser game (in index.js) - A top-down 2D shooter
-// Note: This assumes you will include this index.js in an HTML file with a <canvas id="gameCanvas"></canvas>
-// To use, create an index.html file with that canvas and link this script
-
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = 800;
-canvas.height = 600;
 
-// ========================== GAME SETUP ==========================
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
 let keys = {};
 let bullets = [];
@@ -17,10 +16,10 @@ let gameOver = false;
 
 class Player {
   constructor() {
-    this.x = canvas.width / 2;
-    this.y = canvas.height - 60;
     this.width = 40;
     this.height = 40;
+    this.x = canvas.width / 2 - this.width / 2;
+    this.y = canvas.height - this.height - 20;
     this.speed = 5;
   }
 
@@ -64,10 +63,10 @@ class Bullet {
 
 class Enemy {
   constructor() {
-    this.x = Math.random() * (canvas.width - 40);
-    this.y = -40;
     this.width = 40;
     this.height = 40;
+    this.x = Math.random() * (canvas.width - this.width);
+    this.y = -this.height;
     this.speed = 2 + Math.random() * 3;
   }
 
@@ -85,8 +84,6 @@ class Enemy {
 }
 
 const player = new Player();
-
-// ========================== GAME LOGIC ==========================
 
 function spawnEnemy() {
   if (!gameOver) {
@@ -137,34 +134,41 @@ function updateGame() {
   });
 
   drawHUD();
-
   requestAnimationFrame(updateGame);
 }
 
 function drawHUD() {
   ctx.fillStyle = 'black';
   ctx.font = '20px Arial';
-  ctx.fillText(`Score: ${score}`, 10, 20);
+  ctx.fillText(`Score: ${score}`, 10, 30);
   if (gameOver) {
     ctx.fillStyle = 'red';
     ctx.font = '40px Arial';
-    ctx.fillText('GAME OVER', canvas.width / 2 - 120, canvas.height / 2);
+    ctx.fillText('GAME OVER', canvas.width / 2 - 140, canvas.height / 2);
   }
 }
 
-// ========================== INPUT ==========================
-
+// ======== INPUT: KEYBOARD ========
 document.addEventListener('keydown', (e) => {
   keys[e.key] = true;
-  if (e.key === ' ') {
-    player.shoot();
-  }
+  if (e.key === ' ') player.shoot();
 });
-
 document.addEventListener('keyup', (e) => {
   keys[e.key] = false;
 });
 
-// ========================== START ==========================
+// ======== INPUT: TOUCH CONTROLS ========
+const btns = document.querySelectorAll('.button');
+btns.forEach(btn => {
+  const dir = btn.dataset.dir;
+  btn.addEventListener('touchstart', () => keys[dir] = true);
+  btn.addEventListener('touchend', () => keys[dir] = false);
+});
+
+document.getElementById('shootBtn').addEventListener('touchstart', () => {
+  player.shoot();
+});
+
+// ================== START ==================
 spawnEnemy();
 updateGame();
