@@ -1,9 +1,12 @@
+// JavaScript code
+
 // Game variables
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const inputElement = document.getElementById('inputText');
 const scoreElement = document.getElementById('score');
 const restartButton = document.getElementById('restartButton');
+const currentWordElement = document.getElementById('currentWord'); // Element to display current word
 
 let balloons = [];
 let score = 0;
@@ -33,6 +36,7 @@ const wordList = ["alphabet", "astronaut", "bicycle", "camera", "planet", "rocke
       "chili powder", "cayenne", "cumin", "mustard", "bay leaves", "vinegar", "balsamic vinegar", "white vinegar", "apple cider",
       "shoyu", "soy sauce", "worcestershire sauce", "hot sauce", "mustard", "tomato paste", "salsa", "peanut butter", "mayo"
     ];
+
 
 // Balloon class
 class Balloon {
@@ -113,6 +117,15 @@ function gameLoop() {
     generateBalloon();
     inputElement.value = '';
   }
+
+  // Display the current word below the restart button
+  printCurrentWord();
+}
+
+// Function to display the current word below the restart button
+function printCurrentWord() {
+  const currentWord = balloons.length > 0 ? balloons[0].word : ''; // Get the current word
+  currentWordElement.textContent = `Current Word: ${currentWord}`;
 }
 
 // Generate a new balloon with a random word
@@ -138,13 +151,3 @@ restartButton.addEventListener('click', function() {
 
 // Start the game when the page loads
 startGame();
-
-function printCurrentWord() {
-  const currentWord = balloons.length > 0 ? balloons[0].word : ''; // Get the current word
-  ctx.fillStyle = 'black';
-  ctx.font = '20px Arial';
-  const wordWidth = ctx.measureText(currentWord).width;
-  const xPosition = canvas.width / 2 - wordWidth / 2; // Center the word
-  const yPosition = canvas.height - 20; // Position at the bottom of the canvas
-  ctx.fillText(currentWord, xPosition, yPosition);
-}
