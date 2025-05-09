@@ -107,18 +107,19 @@
       "chili powder", "cayenne", "cumin", "mustard", "bay leaves", "vinegar", "balsamic vinegar", "white vinegar", "apple cider",
       "shoyu", "soy sauce", "worcestershire sauce", "hot sauce", "mustard", "tomato paste", "salsa", "peanut butter", "mayo"
     ];
+    ];
 
     let score = 0;
-    let balloons = [];
+    let balloon = null;  // Only one balloon at a time
     let gameOver = false;
     let wordInputValue = '';
 
     class Balloon {
       constructor(word) {
         this.word = word;
-        this.x = Math.random() * (canvas.width - 100);
-        this.y = canvas.height + 50;
-        this.speed = Math.random() * 1.5 + 1; // slower balloons
+        this.x = canvas.width / 2 - 50;  // Centered horizontally
+        this.y = canvas.height + 50;  // Start from below the canvas
+        this.speed = 1; // Slow speed for mobile-friendliness
       }
 
       draw() {
@@ -130,7 +131,7 @@
 
         ctx.fillStyle = '#fff';
         ctx.font = '20px Arial';
-        ctx.fillText(this.word, this.x + 15, this.y - 10);
+        ctx.fillText(this.word, this.x + 10, this.y - 10);
       }
 
       update() {
@@ -141,28 +142,28 @@
       }
     }
 
-    // Function to spawn a random balloon
+    // Function to spawn a balloon with a random word
     function spawnBalloon() {
       const word = words[Math.floor(Math.random() * words.length)];
-      balloons.push(new Balloon(word));
+      balloon = new Balloon(word);
     }
 
     // Function to check if typed word matches the balloon's word
     function checkWordMatch() {
-      if (wordInputValue.trim().toLowerCase() === balloons[0].word.toLowerCase()) {
+      if (wordInputValue.trim().toLowerCase() === balloon.word.toLowerCase()) {
         score += 100;
-        balloons.shift();
-        wordInputValue = '';
+        spawnBalloon();  // Spawn a new balloon after popping the current one
+        wordInputValue = '';  // Clear the input field
       }
     }
 
     function drawGame() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      balloons.forEach((balloon, index) => {
+      if (balloon) {
         balloon.update();
         balloon.draw();
-      });
+      }
 
       scoreDiv.textContent = `Score: ${score}`;
 
@@ -181,12 +182,12 @@
     // Event listener for word submission
     submitBtn.addEventListener('click', () => {
       wordInputValue = wordInput.value.toLowerCase().trim();
-      wordInput.value = '';
+      wordInput.value = '';  // Clear the input field
       checkWordMatch();
     });
 
-    // Start the game loop
-    setInterval(spawnBalloon, 1000);
+    // Start the game by spawning the first balloon and entering the game loop
+    spawnBalloon();
     updateGame();
   </script>
 
